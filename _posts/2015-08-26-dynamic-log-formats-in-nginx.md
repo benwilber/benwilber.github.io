@@ -56,7 +56,7 @@ But now what happens if `$args` contains a `comma` and a `quote` character?
 1440618416.679,"foo=bar&baz="this has a , and is quoted""
 ```
 
-We can predict the problem this is going to cause for `csc.reader`:
+We can predict the problem this is going to cause for `csv.reader`:
 
 ```python
 ['1440618416.679', 'foo=bar&baz=this has a ', ' and is quoted""']
