@@ -118,7 +118,7 @@ location = /pixel.gif {
 
 `nginx: [emerg] unknown "extra_msg" variable`
 
-Uh oh.  The problem here is that if we don't explicitely set `$extra_msg` via `set $extra_msg <src>`, then nginx can't resolve the variable when it compiles the config.  It doesn't default to an empty string as you might except.  The solution is rather simple by using a [`map`](http://nginx.org/en/docs/http/ngx_http_map_module.html):
+Uh oh.  The problem here is that if we don't explicitly set `$extra_msg` via `set $extra_msg <src>`, then nginx can't resolve the variable when it compiles the config.  It doesn't default to an empty string as you might except.  The solution is rather simple by using a [`map`](http://nginx.org/en/docs/http/ngx_http_map_module.html):
 
 ```nginx
 map $status $extra_msg {
