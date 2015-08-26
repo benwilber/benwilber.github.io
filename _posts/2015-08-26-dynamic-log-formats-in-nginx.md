@@ -15,7 +15,7 @@ which produces log lines of:
 1440615892.165,foo=bar&baz=1
 ```
 
-That's simple enough to parse because we know there are only two fields: timestamp, and query parameters.  In Python we can just split this on the first instance of a `comma` and be confident that we accurately capture both fields regardless of whether `$args` also contained a `comma` (ie, wasn't urlencoded).
+That's simple enough to parse because we know there are only two fields: timestamp, and query parameters.  In Python we can just split this on the first instance of a comma and be confident that we accurately capture both fields regardless of whether `$args` also contained a comma (ie, wasn't urlencoded).
 
 ```python
 event = "1440616054.165,foo=bar&baz=this, has a comma"
@@ -50,7 +50,7 @@ Now `csv.reader` works as expected:
 ['1440616054.165', 'foo=bar&baz=this, has a comma']
 ```
 
-But now what happens if `$args` contains a `comma` and a `quote` character?
+But now what happens if `$args` contains a comma and a quote character?
 
 ```
 1440618416.679,"foo=bar&baz="this has a , and is quoted""
