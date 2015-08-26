@@ -3,6 +3,7 @@ layout: post
 title:  "Realtime pixel tracking with nginx, syslog-ng, and redis"
 date:   2013-09-13 02:57:28
 categories: nginx redis syslog pixel-tracking
+comments: true
 ---
 
 Pixel tracking is all over the internet.  Everything from simple page loads to sophisticated ad impression tracking uses web beacons in one form or another.  While it used to be sufficient to just process your access logs offline (remember [Webalizer](http://www.webalizer.org/)?), that is simply no longer the case.  We now require sophisticated realtime analytics to gain insights for A/B testing, bounce debugging, etc.  All the "growth hacking" buzzwords.  There are a million services you can pay to do this for you today, and a million more will spin up tomorrow.  This is how you can do it yourself using the tools you already have.  Of course, the data science to make use of it will be left to you.
