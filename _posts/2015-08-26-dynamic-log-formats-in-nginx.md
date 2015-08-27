@@ -128,7 +128,7 @@ map $status $extra_msg {
 
 `map`s are very cool, underutilized structures in nginx.  If you are ever faced with using an [`if`](http://wiki.nginx.org/IfIsEvil) during a request, you should check to see if you can use a `map` instead.
 
-In our case, we're going to use this `map` a little differently than the intended use-cases.  We don't actually care about the `$status` here.  We only need to pick a variable that we know will resolve so that we can set up our `$extra_msg` variable.  No matter what the `$status` is, our `$extra_msg` variable will always default to a hyphen `"-"`, which, in the world of access logs, means "unset".
+In our case, we're going to use this `map` a little differently than the intended use-cases.  We don't actually care about the `$status` here.  We only need to pick a variable that we know will resolve so that we can set up our `$extra_msg` variable.  No matter what the `$status` is, our `$extra_msg` variable will always default to a hyphen `"-"`, which in the world of access logs, means "unset".
 
 Now we can do contrived things like:
 
