@@ -5,7 +5,7 @@ categories: nginx syslog logging
 comments: true
 ---
 
-Some time ago [I wrote]({% post_url 2013-09-13-realtime-pixel-tracking-with-nginx-syslog-ng-and-redis %}) about a way to implement simple realtime pixel tracking using nginx, redis, and syslog-ng.  It is a somewhat novel approach that simply logs requests in a CSV format:
+Some time ago [I wrote]({% post_url 2013-09-13-realtime-pixel-tracking-with-nginx-syslog-ng-and-redis %}) about a way to implement simple realtime pixel tracking using nginx, redis, and syslog-ng.  It is a somewhat novel approach that logs requests in a CSV format:
 
 ```
 "$msec,$args"
@@ -15,7 +15,7 @@ which produces log lines of:
 1440615892.165,foo=bar&baz=1
 ```
 
-That's simple enough to parse because we know there are only two fields: timestamp, and query parameters.  In Python we can just split this on the first instance of a comma and be confident that we accurately capture both fields regardless of whether `$args` also contained a comma (ie, wasn't urlencoded).
+That's easy enough to parse because we know there are only two fields: timestamp, and query parameters.  In Python we can just split this on the first instance of a comma and be confident that we accurately capture both fields regardless of whether `$args` also contained a comma (ie, wasn't urlencoded).
 
 ```python
 event = "1440616054.165,foo=bar&baz=this, has a comma"
@@ -35,7 +35,7 @@ for row in csv.reader(sio):
 ['1440616054.165', 'foo=bar&baz=this', ' has a comma']
 ```
 
-The simple solution here would be to quote `$args` when logging:
+The solution would be to quote `$args` when logging:
 
 ```
 '$msec,"$args"'
@@ -50,19 +50,19 @@ Now `csv.reader` works as expected:
 ['1440616054.165', 'foo=bar&baz=this, has a comma']
 ```
 
-But now what happens if `$args` contains a comma and a quote character?
+But what happens if `$args` contains a comma *and* a quote character?
 
 ```
 1440618416.679,"foo=bar&baz="this has a , and is quoted""
 ```
 
-We can predict the problem this is going to cause for `csv.reader`:
+We can predict the problem this is going to cause:
 
 ```python
 ['1440618416.679', 'foo=bar&baz=this has a ', ' and is quoted""']
 ```
 
-We could fight this all day, but the real solution is to simply always urlencode your query parameters.  This is, however, not always possible if you don't control the clients making requests to your server.  What we want to do is *force* urlencoding when we log.
+We could fight this all day, but the real solution is to always urlencode your query parameters.  This is, however, not always possible if you don't control the clients making requests to your server.  What we want to do is *force* urlencoding when we log.
 
 
 ## [`set_escape_uri`](http://wiki.nginx.org/HttpSetMiscModule#set_escape_uri)
@@ -88,7 +88,7 @@ location = /pixel.gif {
   }
 ```
 
-Here we simply urlencoded the `$args` and assigned the result to `$escaped_args`, which is used in our `log_format`.  Now events are logged in a much safer way to parse:
+Here we urlencoded the `$args` and assigned the result to `$escaped_args`, which is used in our `log_format`.  Now events are logged in a much safer way to parse:
 
 ```
 1440620805.833,foo%3Dbar%26baz%3D%22this%20is%20quoted%22
@@ -118,7 +118,7 @@ location = /pixel.gif {
 
 `nginx: [emerg] unknown "extra_msg" variable`
 
-Uh oh.  The problem here is that if we don't explicitly set `$extra_msg` via `set $extra_msg <src>`, then nginx can't resolve the variable when it compiles the config.  It doesn't default to an empty string as you might except.  The solution is rather simple by using a [`map`](http://nginx.org/en/docs/http/ngx_http_map_module.html):
+Uh oh.  The problem here is that if we don't explicitly set `$extra_msg` via `set $extra_msg <src>`, then nginx can't resolve the variable when it compiles the config.  It doesn't default to an empty string as you might except.  The solution is to use a [`map`](http://nginx.org/en/docs/http/ngx_http_map_module.html):
 
 ```nginx
 map $status $extra_msg {
@@ -128,7 +128,7 @@ map $status $extra_msg {
 
 `map`s are very cool, underutilized structures in nginx.  If you are ever faced with using an [`if`](http://wiki.nginx.org/IfIsEvil) during a request, you should check to see if you can use a `map` instead.
 
-In our case, we're going to use this `map` a little differently than the intended use-cases.  We don't actually care about the `$status` here.  We only need to pick a variable that we know will resolve so that we can set up our `$extra_msg` variable.  No matter what the `$status` is, our `$extra_msg` variable will always default to a hyphen `"-"`, which in the world of access logs, essentially means "unset".
+In our case, we're going to use this `map` a little differently than the intended use-cases.  We don't actually care about the `$status` here.  We only need to pick a variable that we know will resolve so that we can set up our `$extra_msg` variable.  No matter what the `$status` is, our `$extra_msg` variable will always default to a hyphen `"-"`, which, in the world of access logs, means "unset".
 
 Now we can do contrived things like:
 
