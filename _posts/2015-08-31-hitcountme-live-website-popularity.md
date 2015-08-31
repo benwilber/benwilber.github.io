@@ -5,7 +5,9 @@ categories: nginx syslog redis logging static blog hit counter
 comments: true
 ---
 
-I've been experimenting quite a bit lately with various neat things you can do using just nginx, redis, and syslog-ng.  Most recently I wrote about how to use [dynamic log formats]({% post_url 2015-08-26-dynamic-log-formats-in-nginx %}) in nginx.  Before that [I wrote]({% post_url 2013-09-13-realtime-pixel-tracking-with-nginx-syslog-ng-and-redis %}) about an interesting way to implement realtime pixel tracking.  I've decided to put some of these things together into a simple site that someone might find interesting.  Introducing: [Hitcount.me](https://hitcount.me/).
+I've been experimenting quite a bit lately with various neat things you can do using just nginx, redis, and syslog-ng.  Most recently I wrote about how to use [dynamic log formats]({% post_url 2015-08-26-dynamic-log-formats-in-nginx %}) in nginx.  Before that [I wrote]({% post_url 2013-09-13-realtime-pixel-tracking-with-nginx-syslog-ng-and-redis %}) about an interesting way to implement realtime pixel tracking.  I've decided to put some of these things together into a simple site that someone might find interesting.
+
+### Introducing: [Hitcount.me](https://hitcount.me/)
 
 The idea is pretty basic.  Just include the following HTML somewhere on your page:
 
