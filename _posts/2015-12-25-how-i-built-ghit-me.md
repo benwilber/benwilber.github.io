@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How I built ghit.me"
+title:  "How I built ghit.me, hit count badges for github"
 date:   2015-12-25 15:57:28
 categories: nginx syslog-ng redis github hit counter
 comments: true
