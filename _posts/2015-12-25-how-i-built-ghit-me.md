@@ -62,4 +62,69 @@ log {
 
 Now we set syslog-ng to filter and parse these messages, and do some Redis operations with them.  In this case we're just adding the repo to the set `repos` (all time counters) and `repos:<date>`, which is daily counters.  And we just increment the hit counter for each repo, one for total, and one for each day.
 
-And now we just use a really simple cronjob to aggregate counters for each repo, and write new svg badge images.
+And now we just use a really simple cronjob to aggregate counters for each repo, and write new svg badge images:
+
+```python
+#!/usr/bin/env python
+from os.path import join as pathjoin
+import locale
+import redis
+
+# for pretty numbers
+locale.setlocale(locale.LC_ALL, 'en_US')
+
+BADGE_DIR = "/var/www/ghit.me/badges"
+BADGE_TEMPLATE = """
+<svg xmlns="http://www.w3.org/2000/svg" width="95" height="20">
+    <linearGradient id="b" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
+        <stop offset="1" stop-opacity=".1"/>
+    </linearGradient><mask id="a">
+    <rect width="95" height="20" rx="3" fill="#fff"/>
+    </mask>
+    <g mask="url(#a)"><path fill="#555" d="M0 0h53v20H0z"/>
+        <path fill="#13B28A" d="M53 0h42v20H53z"/>
+        <path fill="url(#b)" d="M0 0h95v20H0z"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="26.5" y="15" fill="#010101" fill-opacity=".3">ghit.me</text>
+        <text x="26.5" y="14">ghit.me</text><text x="73" y="15" fill="#010101" fill-opacity=".3">
+            {count}
+        </text>
+        <text x="73" y="14">
+            {count}
+        </text>
+    </g>
+</svg>
+"""
+
+
+def repokey(repo):
+    """redis key storing counts for a repo
+    """
+    return "repo:{}".format(repo)
+
+
+def writebadge(repo, count):
+    """Write updated count to <repo>.svg
+    """
+    path = "{}.svg".format(pathjoin(BADGE_DIR, repo))
+    # 1000 -> 1,000
+    svg = BADGE_TEMPLATE.format(
+        count=locale.format("%d", count, grouping=True))
+
+    with open(path, "wb") as fd:
+        fd.write(svg)
+
+
+def main():
+    r = redis.Redis()
+    repos = r.smembers("repos")
+    repo_keys = map(repokey, repos)
+    for repo, count in zip(repos, r.mget(repo_keys)):
+        writebadge(repo, int(count or 0))
+
+
+if __name__ == '__main__':
+    main()
+```
