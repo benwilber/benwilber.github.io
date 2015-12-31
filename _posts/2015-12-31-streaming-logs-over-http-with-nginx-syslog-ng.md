@@ -44,25 +44,25 @@ This logs a message in nginx's standard `main` logging format under the tag `bad
 ### nginx-push-stream
 
 ```nginx
-    location ~ ^/pub/(.+)$ {
-        push_stream_publisher admin;
-        push_stream_channels_path $1;
-        push_stream_store_messages on;
-    }
+location ~ ^/pub/(.+)$ {
+    push_stream_publisher admin;
+    push_stream_channels_path $1;
+    push_stream_store_messages on;
+}
 
-    location ~ ^/sub/(.+)$ {
-        push_stream_subscriber;
-        push_stream_channels_path $1;
-        push_stream_message_template ~text~\n;
-    }
+location ~ ^/sub/(.+)$ {
+    push_stream_subscriber;
+    push_stream_channels_path $1;
+    push_stream_message_template ~text~\n;
+}
 
-    location ~ ^/ws/(.+)$ {
-        push_stream_subscriber websocket;
-        push_stream_websocket_allow_publish off;
-        push_stream_ping_message_interval 10s;
-        push_stream_channels_path $1;
-        push_stream_message_template ~text~\n;
-    }
+location ~ ^/ws/(.+)$ {
+    push_stream_subscriber websocket;
+    push_stream_websocket_allow_publish off;
+    push_stream_ping_message_interval 10s;
+    push_stream_channels_path $1;
+    push_stream_message_template ~text~\n;
+}
 ```
 
 Here we just set up our `push-stream` endpoints.  `/pub/<channel>` to publish messages via HTTP POST, `/sub/<channel>` to subscribe via long-polling, and `/ws/<channel>` to subscribe via a WebSocket.
