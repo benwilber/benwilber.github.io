@@ -104,4 +104,4 @@ $ curl -s https://ghit.me/sub/badge-access
 ...
 ```
 
-Now we're streaming access logs just via cURL from a single endpoint.
+We're streaming access logs just via cURL from a single endpoint.
