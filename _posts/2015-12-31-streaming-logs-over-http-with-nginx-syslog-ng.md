@@ -111,12 +111,12 @@ log {
 };
 ```
 
-We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/pub/badge_access`, which publishes the log message.
+We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/pub/${PROGRAM}`, either `badge_access` or `badge_error`, which publishes the log message to that channel.
 
 Now we can subscribe to log messages via:
 
 ```bash
-$ curl -s https://ghit.me/sub/badge_access
+$ curl -s https://ghit.me/logs/badge_access
 <REMOTE-ADDR> - - [31/Dec/2015:17:39:24 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 731 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
 <REMOTE-ADDR> - - [31/Dec/2015:17:41:14 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 735 "https://ghit.me/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
 <REMOTE-ADDR> - - [31/Dec/2015:17:41:17 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 729 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
@@ -126,10 +126,4 @@ $ curl -s https://ghit.me/sub/badge_access
 ...
 ```
 
-Similarly for `badge_error`:
-
-```bash
-$ curl -s https://ghit.me/sub/badge_error
-```
-
-We're streaming access logs just via cURL from a single endpoint.
+We're streaming our logs just via cURL from a single endpoint.
