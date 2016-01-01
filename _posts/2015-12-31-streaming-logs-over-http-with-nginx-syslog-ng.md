@@ -11,13 +11,16 @@ I often want to `tail` my application/website logs across multiple servers at th
 The end result is that you can "tail" logs across N servers just via:
 
 ```bash
-$ curl -s https://example.com/logs/<log-name>
+$ curl -s https://ghit.me/logs/badge-access
 <log line>
 <log line>
 <log line>
 <log line>
 ...
 ```
+
+Give it a try!
+
 
 In this example we're going to stream the access logs of badge requests from [ghit.me](https://ghit.me/).
 
