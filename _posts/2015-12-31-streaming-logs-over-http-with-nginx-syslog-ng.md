@@ -48,8 +48,8 @@ location = /badge.svg {
     set_formatted_gmt_time $datestr "%Y-%m-%d";
     set_escape_uri $escaped_repo $arg_repo;
     access_log syslog:server=127.0.0.1,facility=local3,tag=badge,severity=info badge;
-    access_log syslog:server=127.0.0.1,facility=local3,tag=badge-access,severity=info main;
-    error_log syslog:server=127.0.0.1,facility=local3,tag=badge-error,severity=info;
+    access_log syslog:server=127.0.0.1,facility=local3,tag=badge_access,severity=info main;
+    error_log syslog:server=127.0.0.1,facility=local3,tag=badge_error,severity=info;
     alias /var/www/ghit.me/badges/$escaped_repo.svg;
 }  
 ```
