@@ -21,6 +21,10 @@ $ curl -s https://ghit.me/logs/badge_access
 
 Give it a try!
 
+```bash
+$ curl -s https://ghit.me/logs/badge_access
+```
+
 
 In this example we're going to stream the access logs of badge requests from [ghit.me](https://ghit.me/).
 
