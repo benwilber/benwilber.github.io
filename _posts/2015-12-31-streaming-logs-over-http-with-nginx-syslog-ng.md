@@ -57,11 +57,11 @@ location = /badge.svg {
 Take a look at my [previous post]({% post_url 2015-12-25-how-i-built-ghit-me %}) about [ghit.me](https://ghit.me/) for details on what the `badge.svg` location entails.  The only additional thing I added was:
 
 ```
-access_log syslog:server=127.0.0.1,facility=local3,tag=badge-access,severity=info main;
-error_log syslog:server=127.0.0.1,facility=local3,tag=badge-error,severity=info;
+access_log syslog:server=127.0.0.1,facility=local3,tag=badge_access,severity=info main;
+error_log syslog:server=127.0.0.1,facility=local3,tag=badge_error,severity=info;
 ```
 
-This logs a message in nginx's standard `main` logging format under the tag `badge-access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO (first-in-first-out) buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge-error`.
+This logs a message in nginx's standard `main` logging format under the tag `badge_access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO (first-in-first-out) buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge_error`.
 
 ### nginx-push-stream
 
