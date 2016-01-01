@@ -25,6 +25,8 @@ Give it a try!
 $ curl -s https://ghit.me/logs/badge_access
 ```
 
+(note: if you don't see anything, then go visit [ghit.me](https://ghit.me), which will cause a log event)
+
 
 In this example we're going to stream the access logs of badge requests from [ghit.me](https://ghit.me/).
 
