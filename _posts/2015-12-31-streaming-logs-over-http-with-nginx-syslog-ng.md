@@ -11,7 +11,7 @@ I often want to `tail` my application/website logs across multiple servers at th
 The end result is that you can "tail" logs across N servers just via:
 
 ```bash
-$ curl -s https://ghit.me/logs/badge-access
+$ curl -s https://ghit.me/logs/badge_access
 <log line>
 <log line>
 <log line>
