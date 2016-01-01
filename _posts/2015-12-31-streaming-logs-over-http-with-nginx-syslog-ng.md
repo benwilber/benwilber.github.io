@@ -29,6 +29,7 @@ location = /badge.svg {
     set_escape_uri $escaped_repo $arg_repo;
     access_log syslog:server=127.0.0.1,facility=local3,tag=badge,severity=info badge;
     access_log syslog:server=127.0.0.1,facility=local3,tag=badge-access,severity=info main;
+    error_log syslog:server=127.0.0.1,facility=local3,tag=badge-error,severity=info;
     alias /var/www/ghit.me/badges/$escaped_repo.svg;
 }  
 ```
@@ -37,9 +38,10 @@ Take a look at my [previous post]({% post_url 2015-12-25-how-i-built-ghit-me %})
 
 ```
 access_log syslog:server=127.0.0.1,facility=local3,tag=badge-access,severity=info main;
+error_log syslog:server=127.0.0.1,facility=local3,tag=badge-error,severity=info;
 ```
 
-This logs a message in nginx's standard `main` logging format under the tag `badge-access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO (first-in-first-out) buffer of access log lines stored in memory.
+This logs a message in nginx's standard `main` logging format under the tag `badge-access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO (first-in-first-out) buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge-error`.
 
 ### nginx-push-stream
 
@@ -75,7 +77,7 @@ template t_badge_http {
 };
 
 filter f_badge_access {
-    facility(local3) and level(info) and program("badge-access");
+    facility(local3) and level(info);
 };
 
 destination d_badge_http {
@@ -89,7 +91,7 @@ log {
 };
 ```
 
-We tell syslog-ng to filter messages for `local3.info`, and tag `badge-access`, and apply the template `t_badge_http`, which is just a raw HTTP POST to `/pub/badge-access`, which publishes the log message.
+We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/pub/badge-access`, which publishes the log message.
 
 Now we can subscribe to log messages via:
 
@@ -102,6 +104,12 @@ $ curl -s https://ghit.me/sub/badge-access
 <REMOTE-ADDR> - - [31/Dec/2015:17:41:58 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 731 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
 <REMOTE-ADDR> - - [31/Dec/2015:17:42:48 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 304 0 "https://ghit.me/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
 ...
+```
+
+Similarly for `badge-error`:
+
+```bash
+$ curl -s https://ghit.me/sub/badge-error
 ```
 
 We're streaming access logs just via cURL from a single endpoint.
