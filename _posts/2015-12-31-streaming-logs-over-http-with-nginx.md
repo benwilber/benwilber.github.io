@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Streaming logs over HTTP with nginx, push-stream, and syslog-ng"
+title:  "Streaming logs over HTTP with nginx"
 date:   2015-12-31 15:57:28
 categories: nginx syslog-ng logs push stream
 comments: true
