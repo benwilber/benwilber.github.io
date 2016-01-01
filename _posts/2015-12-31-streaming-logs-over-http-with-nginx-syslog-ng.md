@@ -8,6 +8,17 @@ comments: true
 
 I often want to `tail` my application/website logs across multiple servers at the same time.  There are various SSH-based tools to do this, which basically just SSH to a bunch of servers and then combine the outputs of `tail -f` to your terminal.  I've been working on a better way using [nginx](http://nginx.org), [nginx-push-stream](https://github.com/wandenberg/nginx-push-stream-module), and [syslog-ng](https://www.balabit.com/network-security/syslog-ng).
 
+The end result is that you can "tail" logs across N servers just via:
+
+```bash
+$ curl -s https://example.com/logs/<log-name>
+<log line>
+<log line>
+<log line>
+<log line>
+...
+```
+
 In this example we're going to stream the access logs of badge requests from [ghit.me](https://ghit.me/).
 
 ## nginx
