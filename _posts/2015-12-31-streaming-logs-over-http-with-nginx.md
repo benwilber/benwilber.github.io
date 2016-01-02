@@ -12,23 +12,13 @@ The end result is that you can "tail" logs across N servers just via:
 
 ```bash
 $ curl -s https://ghit.me/logs/badge_access
-<log line>
-<log line>
-<log line>
-<log line>
+<remote addr> - - [02/Jan/2016:15:07:22 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
+<remote addr> - - [02/Jan/2016:15:07:46 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
+<remote addr> - - [02/Jan/2016:15:09:22 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
 ...
 ```
 
-Give it a try!
-
-```bash
-$ curl -s https://ghit.me/logs/badge_access
-```
-
-(note: if you don't see anything, then go visit [ghit.me](https://ghit.me), which will cause a log event.  Various buffers and timeouts might delay the message by a few seconds.)
-
-
-In this example we're going to stream the access logs of badge requests from [ghit.me](https://ghit.me/).
+In this example we're streaming the access logs of badge requests from [ghit.me](https://ghit.me/).
 
 ## nginx
 
@@ -40,7 +30,7 @@ http {
                     '"$http_user_agent" "$http_x_forwarded_for" "$request_time"';
     ...
     push_stream_shared_memory_size 100M;
-    push_stream_max_messages_stored_per_channel 100;
+    push_stream_max_messages_stored_per_channel 10;
 }
 ...
 location = /badge.svg {
@@ -61,29 +51,48 @@ access_log syslog:server=127.0.0.1,facility=local3,tag=badge_access,severity=inf
 error_log syslog:server=127.0.0.1,facility=local3,tag=badge_error,severity=info;
 ```
 
-This logs a message in nginx's standard `main` logging format under the tag `badge_access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO (first-in-first-out) buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge_error`.
+This logs a message in nginx's standard `main` logging format under the tag `badge_access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge_error`.
 
 ### nginx-push-stream
 
 ```nginx
 location ~ ^/pub/(.+)$ {
+    internal;
     push_stream_publisher admin;
     push_stream_channels_path $1;
     push_stream_store_messages on;
 }
 
 location ~ ^/sub/(.+)$ {
+    internal;
     push_stream_subscriber;
     push_stream_channels_path $1;
     push_stream_message_template ~text~\n;
 }
 
 location ~ ^/ws/(.+)$ {
+    internal;
     push_stream_subscriber websocket;
     push_stream_websocket_allow_publish off;
     push_stream_ping_message_interval 10s;
     push_stream_channels_path $1;
     push_stream_message_template ~text~\n;
+}
+
+location ~ ^/logs/(.+)$ {
+    set $chan $1;
+
+    if ($http_upgrade ~ "websocket") {
+      rewrite ^ /ws/$chan last;
+    }
+
+    if ($request_method = "GET") {
+      rewrite ^ /sub/$chan last;
+    }
+
+    if ($request_method = "POST") {
+      rewrite ^ /pub/$chan last;
+    }
 }
 ```
 
@@ -93,7 +102,7 @@ Here we just set up our `push-stream` endpoints.  `/pub/<channel>` to publish me
 
 ```syslog-ng
 template t_badge_http {
-    template("POST /pub/${PROGRAM} HTTP/1.1\r\nHost: ghit.me\r\nContent-Length: $(length ${MESSAGE})\r\nConnection: keep-alive\r\n\r\n${MESSAGE}");
+    template("POST /logs/${PROGRAM} HTTP/1.1\r\nHost: ghit.me\r\nContent-Length: $(length ${MESSAGE})\r\nConnection: keep-alive\r\n\r\n${MESSAGE}");
 };
 
 filter f_badge_access {
@@ -101,7 +110,7 @@ filter f_badge_access {
 };
 
 destination d_badge_http {
-    tcp("127.0.0.1" port(80) template(t_badge_http));
+    tcp("127.0.0.1" port(80) template(t_badge_http) keep-alive(yes));
 };
 
 log {
@@ -111,19 +120,23 @@ log {
 };
 ```
 
-We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/pub/${PROGRAM}`, either `badge_access` or `badge_error`, which publishes the log message to that channel.
+We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/logs/${PROGRAM}`, either `badge_access` or `badge_error`, which publishes the log message to that channel.
 
 Now we can subscribe to log messages via:
 
 ```bash
 $ curl -s https://ghit.me/logs/badge_access
-<REMOTE-ADDR> - - [31/Dec/2015:17:39:24 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 731 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
-<REMOTE-ADDR> - - [31/Dec/2015:17:41:14 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 735 "https://ghit.me/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
-<REMOTE-ADDR> - - [31/Dec/2015:17:41:17 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 729 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
-<REMOTE-ADDR> - - [31/Dec/2015:17:41:25 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 735 "https://ghit.me/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
-<REMOTE-ADDR> - - [31/Dec/2015:17:41:58 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 200 731 "-" "Camo Asset Proxy 2.2.0" "-" "0.000"
-<REMOTE-ADDR> - - [31/Dec/2015:17:42:48 -0500] "-" "ghit.me" "GET /badge.svg?repo=<repo> HTTP/1.1" 304 0 "https://ghit.me/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
+<remote addr> - - [02/Jan/2016:15:07:22 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
+<remote addr> - - [02/Jan/2016:15:07:46 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
+<remote addr> - - [02/Jan/2016:15:09:22 -0500] "-" "ghit.me" "GET /badge.svg?repo=benwilber/bashids HTTP/1.1" 304 0 "https://ghit.me/logs.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" "-" "0.000"
 ...
 ```
 
-We're streaming our logs just via cURL from a single endpoint.
+We're streaming our logs via cURL.  It works equally well with a WebSocket:
+
+```javascript
+var ws = new WebSocket("wss://ghit.me/logs/badge_access");
+ws.onmessage = function(e) {
+  console.log(e.data);
+};
+```
