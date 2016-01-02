@@ -68,6 +68,7 @@ location ~ ^/sub/(.+)$ {
     push_stream_subscriber;
     push_stream_channels_path $1;
     push_stream_message_template ~text~\n;
+    add_header Content-Type "text/plain";
 }
 
 location ~ ^/ws/(.+)$ {
