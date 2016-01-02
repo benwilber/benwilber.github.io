@@ -141,3 +141,5 @@ ws.onmessage = function(e) {
   console.log(e.data);
 };
 ```
+
+Or just visit the URL directly and it will stream the logs in your browser.
