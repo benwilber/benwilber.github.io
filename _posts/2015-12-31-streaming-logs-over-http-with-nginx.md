@@ -38,8 +38,8 @@ location = /badge.svg {
     set_formatted_gmt_time $datestr "%Y-%m-%d";
     set_escape_uri $escaped_repo $arg_repo;
     access_log syslog:server=127.0.0.1,facility=local3,tag=badge,severity=info badge;
-    access_log syslog:server=127.0.0.1,facility=local3,tag=badge_access,severity=info main;
-    error_log syslog:server=127.0.0.1,facility=local3,tag=badge_error,severity=info;
+    access_log syslog:server=127.0.0.1,facility=local3,severity=info,tag=badge_access main;
+    error_log syslog:server=127.0.0.1,facility=local3,severity=error,tag=badge_error;
     alias /var/www/ghit.me/badges/$escaped_repo.svg;
 }  
 ```
@@ -47,8 +47,8 @@ location = /badge.svg {
 Take a look at my [previous post]({% post_url 2015-12-25-how-i-built-ghit-me %}) about [ghit.me](https://ghit.me/) for details on what the `badge.svg` location entails.  The only additional thing I added was:
 
 ```
-access_log syslog:server=127.0.0.1,facility=local3,tag=badge_access,severity=info main;
-error_log syslog:server=127.0.0.1,facility=local3,tag=badge_error,severity=info;
+access_log syslog:server=127.0.0.1,facility=local3,severity=info,tag=badge_access main;
+error_log syslog:server=127.0.0.1,facility=local3,severity=error,tag=badge_error;
 ```
 
 This logs a message in nginx's standard `main` logging format under the tag `badge_access`.  `push_stream_max_messages_stored_per_channel` is a global setting that sets the maximum messages to buffer.  In our case it will function as a FIFO buffer of access log lines stored in memory.  Additionally, we're logging the badge error log to `badge_error`.
@@ -106,8 +106,8 @@ template t_badge_http {
     template("POST /logs/${PROGRAM} HTTP/1.1\r\nHost: ghit.me\r\nContent-Length: $(length ${MESSAGE})\r\nConnection: keep-alive\r\n\r\n${MESSAGE}");
 };
 
-filter f_badge_access {
-    facility(local3) and level(info);
+filter f_badge_logs {
+    facility(local3) and (level(info) or level(error));
 };
 
 destination d_badge_http {
@@ -116,12 +116,12 @@ destination d_badge_http {
 
 log {
     source(s_sys);
-    filter(f_badge_access);
+    filter(f_badge_logs);
     destination(d_badge_http);
 };
 ```
 
-We tell syslog-ng to filter messages for `local3.info` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/logs/${PROGRAM}`, either `badge_access` or `badge_error`, which publishes the log message to that channel.
+We tell syslog-ng to filter messages for `local3.info` or `local3.error` and apply the template `t_badge_http`, which is just a raw HTTP POST to `/logs/${PROGRAM}`, either `badge_access` or `badge_error`, which publishes the log message to that channel.
 
 Now we can subscribe to log messages via:
 
