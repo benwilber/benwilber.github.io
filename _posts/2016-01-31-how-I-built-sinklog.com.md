@@ -165,7 +165,7 @@ log {
 };
 ```
 
-Now when `syslog-ng` receives messages it does and HTTP POST to `nginx-push-stream`, which then delivers the message to any subscribers on that "channel".  The lua rewrite script ensures that the log key is properly translated to the correct log name.
+Now when `syslog-ng` receives messages it does an HTTP POST to `nginx-push-stream`, which then delivers the message to any subscribers on that "channel".  The lua rewrite script ensures that the log key is properly translated to the correct log name.
 
 And that's basically it!  Now you can log anything you want via syslog and view the stream using any HTTP/Websocket client.
 
