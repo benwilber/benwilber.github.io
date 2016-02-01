@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How I build Sinklog.com, combine your log outputs into a single stream."
+title:  "How I built Sinklog.com, combine your log outputs into a single stream."
 date:   2016-01-31 00:00:00
 categories: nginx syslog-ng logs push stream syslog http websocket lua
 comments: true
