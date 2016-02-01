@@ -32,7 +32,7 @@ The server setup is just `nginx`, `syslog-ng`, `redis`, and a tiny bit of `lua`.
 
 ## nginx
 
-`nginx` is compiled with [nginx-push-stream-module](https://github.com/wandenberg/nginx-push-stream-module) for the HTTP streaming/websocket support, OpenResty's [set-misc](https://github.com/openresty/set-misc-nginx-module) and [lua](https://github.com/openresty/lua-nginx-module) modules.
+`nginx` is compiled with [nginx-push-stream-module](https://github.com/wandenberg/nginx-push-stream-module) for the HTTP streaming/websocket support, and OpenResty's [set-misc](https://github.com/openresty/set-misc-nginx-module) and [lua](https://github.com/openresty/lua-nginx-module) modules.
 
 ### nginx configuration
 
@@ -167,7 +167,7 @@ log {
 
 Now when `syslog-ng` receives messages it does an HTTP POST to `nginx-push-stream`, which then delivers the message to any subscribers on that "channel".  The lua rewrite script ensures that the log key is properly translated to the correct log name.
 
-And that's basically it!  Now you can log anything you want via syslog and view the stream using any HTTP/Websocket client.
+And that's basically it!  Now you can log anything you want via syslog and tail the stream using any HTTP/Websocket client.
 
 
 
