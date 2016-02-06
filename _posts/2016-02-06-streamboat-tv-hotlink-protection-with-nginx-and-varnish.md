@@ -47,7 +47,7 @@ import digest;
 
 sub vcl_recv {
     set req.http.X-Client-IP = client.ip;
-    set req.http.X-Secure-Hash = digest.hash_sha1(""my-hotlink-secret"" + req.http.X-Client-IP);
+    set req.http.X-Secure-Hash = digest.hash_sha1("my-hotlink-secret" + req.http.X-Client-IP);
     set req.http.X-Provided-Secure-Hash = regsub(req.url, "^.*digest=([a-zA-Z0-9]+).*$", "\1");
 
     // normalize the URL so it's still cacheable
