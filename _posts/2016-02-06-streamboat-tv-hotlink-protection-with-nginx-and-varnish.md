@@ -64,4 +64,4 @@ sub vcl_recv {
 ...
 ```
 
-And that's basically it.  It doesn't rely on fungible `Referer` blocks, or any other non-scalable mechanisms.  Viewers can watch their streams however they want as long as they personally got the link from [Streamboat.tv](https://streamboat.tv/).
+And that's basically it.  It doesn't rely on fungible `Referer` blocks, or any other non-scalable mechanisms.  People can watch their streams however they want as long as they personally got the link from [Streamboat.tv](https://streamboat.tv/).
