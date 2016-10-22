@@ -57,7 +57,7 @@ rtmp {
 }
 ```
 
-When a stream starts publishing `nginx-rtmp` will dispatch an HTTP POST request to `http://127.0.0.1:8080/stream_event/on_publish`, expecting either a `2xx` response to accept the stream, a `3xx` to redirect the stream, or any other code to deny the stream.  Assuming our Django application is listening on `localhost:8080`, we can set up a handler to receive these events.
+When a stream starts publishing `nginx-rtmp` will dispatch an HTTP POST request to `http://127.0.0.1:8080/on_publish`, expecting either a `2xx` response to accept the stream, a `3xx` to redirect the stream, or any other code to deny the stream.  Assuming our Django application is listening on `localhost:8080`, we can set up a handler to receive these events.
 
 
 ## Django
