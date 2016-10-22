@@ -8,7 +8,7 @@ comments: true
 
 Any live video streaming community needs the ability for streamers to publish streams to a private endpoint but have their stream play back on their public profile or channel.  This is typically implemented by providing a secret "stream key" known only to the streamer, preventing others from being able to stream on their account.  There's nothing special about the stream key as far as RTMP is concerned, it's just a regular stream name.  However, when a stream is published under this secret name the RTMP server has the opportunity to inspect the stream key, lookup and verify the publishing user, and redirect the stream to their public profile stream.  The stream key is never visible or accessible publicly.
 
-Implementing this flow with nginx-rtmp and Django is pretty straightforward.
+Implementing this flow with [nginx-rtmp](https://github.com/arut/nginx-rtmp-module) and [Django](https://www.djangoproject.com/) is pretty straightforward.
 
 ## nginx-rtmp
 The following example configuration assumes that you want to allow private stream publishing via RTMP, but only allow playback via HTTP/HLS.  No RTMP playback is permitted.
