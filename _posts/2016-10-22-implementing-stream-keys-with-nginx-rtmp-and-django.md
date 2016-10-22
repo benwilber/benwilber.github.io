@@ -138,6 +138,7 @@ $ ffmpeg -i video.mp4 -c:v h264 -c:a aac -f flv rtmp://<stream host>:1935/app/J4
 ```
 
 Fetch the public stream playlist:
+
 ```
 $ wget -qO- http://<stream host>/live/benw/index.m3u8
 #EXTM3U
