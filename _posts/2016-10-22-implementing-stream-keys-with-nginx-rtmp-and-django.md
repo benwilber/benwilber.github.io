@@ -29,11 +29,10 @@ rtmp {
 
             # HTTP callback when a stream starts publishing
             # Should return 2xx to allow, 3xx to redirect, anything else to deny.
-            on_publish http://127.0.0.1:8080/stream_event/on_publish;
-
+            on_publish http://127.0.0.1:8080/on_publish;
 
             # Called when a stream stops publishing.  Response is ignored.
-            on_publish_done http://127.0.0.1:8080/stream_event/on_publish_done;
+            on_publish_done http://127.0.0.1:8080/on_publish_done;
         }
 
         application hls-live {
