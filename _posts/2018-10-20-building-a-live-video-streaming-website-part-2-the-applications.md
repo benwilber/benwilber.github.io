@@ -6,7 +6,7 @@ categories: nginx rtmp live video streaming django
 comments: true
 ---
 
-This is part 2 of a series on creating a Twitch.tv-like live video streaming website.  See [Part 1 - Start Streaming! here](/nginx/rtmp/live/video/streaming/2018/03/24/building-a-live-video-streaming-website-part-1-start-streaming.html)
+This is part 2 of a series on creating a Twitch.tv-like live video streaming website.  See [Part 1 - Start Streaming! here](/nginx/rtmp/live/video/streaming/2018/03/25/building-a-live-video-streaming-website-part-1-start-streaming.html)
 
 # The Application
 
