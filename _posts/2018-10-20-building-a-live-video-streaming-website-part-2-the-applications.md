@@ -249,7 +249,7 @@ Now you can browse to the [Django admin at http://localhost:8000/admin/](http://
 
 Next we're going to add the RTMP dispatchers and the stream key -> username redirect.
 
-Update the `nginx.conf` from [Part 1](/nginx/rtmp/live/video/streaming/2018/03/24/building-a-live-video-streaming-website-part-1-start-streaming.html) to the following:
+Update the `nginx.conf` from [Part 1](/nginx/rtmp/live/video/streaming/2018/03/25/building-a-live-video-streaming-website-part-1-start-streaming.html) to the following:
 
 ```nginx
 user nginx;
