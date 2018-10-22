@@ -357,8 +357,8 @@ $ ffplay http://boltstream.me/live/benw/index.m3u8
 
 In the next part we're going to add some simple DRM (AES-128 HLS encryption) so that nobody gets to watch your streams unless your want them to.
 
-* [Part 1 - Start Streaming!](/nginx/rtmp/live/video/streaming/2018/03/24/building-a-live-video-streaming-website-part-1-start-streaming.html)
-* [Part 2 - The Application](/nginx/rtmp/live/video/streaming/django/2018/10/19/building-a-live-video-streaming-website-part-2-the-applications.html)
-* Part 3 - DRM
+* [Part 1 - Start Streaming!](/nginx/rtmp/live/video/streaming/2018/03/25/building-a-live-video-streaming-website-part-1-start-streaming.html)
+* [Part 2 - The Application](/nginx/rtmp/live/video/streaming/django/2018/10/20/building-a-live-video-streaming-website-part-2-the-applications.html)
+* [Part 3 - DRM](/nginx/rtmp/live/video/streaming/django/drm/2018/10/20/building-a-live-video-streaming-website-part-3-drm.html)
 * Part 4 - We're big now!  Adding a CDN
 * Part 5 - Bringing it all together
