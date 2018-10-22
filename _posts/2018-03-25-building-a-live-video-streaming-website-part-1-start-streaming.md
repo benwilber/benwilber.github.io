@@ -12,9 +12,9 @@ I've been working with live video streaming in some capacity for several years. 
 
 This is a multipart guide that follows (roughly) this schedule:
 
-* Part 1 - Start Streaming!
-* Part 2 - The Application
-* Part 3 - DRM
+* [Part 1 - Start Streaming!](/nginx/rtmp/live/video/streaming/2018/03/25/building-a-live-video-streaming-website-part-1-start-streaming.html)
+* [Part 2 - The Application](/nginx/rtmp/live/video/streaming/django/2018/10/20/building-a-live-video-streaming-website-part-2-the-applications.html)
+* [Part 3 - DRM](/nginx/rtmp/live/video/streaming/django/drm/2018/10/20/building-a-live-video-streaming-website-part-3-drm.html)
 * Part 4 - We're big now!  Adding a CDN
 * Part 5 - Bringing it all together
 
