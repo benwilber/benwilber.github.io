@@ -103,7 +103,7 @@ Now we just add a simple view to our `views.py` that ensures the viewer is logge
 ```python
 @require_GET
 def authorize_key(request):
-    if request.user.is_authenticated() and request.user.is_active:
+    if request.user.is_authenticated and request.user.is_active:
         # Do other checks here like Pay-Per-View (or Pay-Per-Minute :-))
         return HttpResponse("OK")
 
