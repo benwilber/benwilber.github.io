@@ -87,3 +87,7 @@ Thus, streamboat.tv died.
 
 And this is why you can't run your own video streaming website.
 
+
+But if you're still interested, check out [Boltstream](https://github.com/benwilber/boltstream) and [how to make it](https://benwilber.github.io/nginx/rtmp/live/video/streaming/2018/03/25/building-a-live-video-streaming-website-part-1-start-streaming.html)
+
+
