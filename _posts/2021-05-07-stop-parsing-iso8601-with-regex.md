@@ -54,7 +54,9 @@ Look at this monstrous regex.  Do you think this regex can possibly capture all 
 # What to do?
 
 
-Stop trying to parse ISO-8601 datetime strings with a regex.  As far as I know, there is no regex that can parse the full specification accurately.
+Stop trying to parse ISO-8601 datetime strings with a regex!
+
+As far as I know, there is no regex that can parse the full specification accurately.
 
 Use a library that doesn't use (brittle) regexes to parse the strings.
 
