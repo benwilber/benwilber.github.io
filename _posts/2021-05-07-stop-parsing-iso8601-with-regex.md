@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Stop parsing ISO-8601 datetime strings with a REGEX"
+title:  "Stop parsing ISO-8601 datetime strings with a regex"
 date:   2021-05-07 00:00:00
 categories: programming
 comments: true
@@ -13,7 +13,7 @@ It was a very simple change that was quickly accepted.  A few months later I sub
 
 These were all just trivial regex changes to fix narrow use-cases.
 
-Now I've just submitted [another one to Django](https://github.com/django/django/pull/11818) to fix *yet another* regex ISO-8601 parser bug.
+Now I've just submitted [another one to Django](https://github.com/django/django/pull/14368) to fix *yet another* regex ISO-8601 parser bug.
 
 **I'm starting to see a pattern here.**
 
