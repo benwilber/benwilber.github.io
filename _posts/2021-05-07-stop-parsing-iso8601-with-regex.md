@@ -33,7 +33,7 @@ Django:
 >>> from django.utils.dateparse import parse_datetime
 >>> parse_datetime("2012-04-23T10:20:30.400-0200")
 2012-04-23 10:20:30.400000-02:00
->>> parse_datetime("2012-04-23T10:20:30.400 -0200"))
+>>> parse_datetime("2012-04-23T10:20:30.400 -0200")
 None
 ```
 
@@ -42,7 +42,7 @@ Dateutil:
 >>> from dateutil.parser import parse as parse_datetime
 >>> parse_datetime("2012-04-23T10:20:30.400-0200")
 2012-04-23 10:20:30.400000-02:00
->>> parse_datetime("2012-04-23T10:20:30.400 -0200"))
+>>> parse_datetime("2012-04-23T10:20:30.400 -0200")
 2012-04-23 10:20:30.400000-02:00
 ```
 
