@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Stop parsing ISO-8601 datetime strings with a regex"
+title:  "Don't parse ISO-8601 datetime strings with a regex"
 date:   2021-05-07 00:00:00
 categories: programming
 comments: true
@@ -27,16 +27,25 @@ Consider these two valid ISO-8601 datetime strings:
 2012-04-23T10:20:30.400 -0200
 ```
 
+Django:
+
 ```
->>> from django.utils.dateparse import parse_datetime as django_parse_datetime
->>> from dateutil.parser import parse as dateutil_parse_datetime
->>> print(django_parse_datetime("2012-04-23T10:20:30.400-0200"))
+>>> from django.utils.dateparse import parse_datetime
+>>> parse_datetime("2012-04-23T10:20:30.400-0200")
 2012-04-23 10:20:30.400000-02:00
->>> print(django_parse_datetime("2012-04-23T10:20:30.400 -0200"))
+>>> parse_datetime("2012-04-23T10:20:30.400 -0200"))
 None
->>> print(dateutil_parse_datetime("2012-04-23T10:20:30.400 -0200"))
+```
+
+Dateutil:
+```
+>>> from dateutil.parser import parse as parse_datetime
+>>> parse_datetime("2012-04-23T10:20:30.400-0200")
+2012-04-23 10:20:30.400000-02:00
+>>> parse_datetime("2012-04-23T10:20:30.400 -0200"))
 2012-04-23 10:20:30.400000-02:00
 ```
+
 You see that Django doesn't parse the second string correctly.  Why?
 
 [This is why](https://github.com/django/django/blob/main/django/utils/dateparse.py#L22):
@@ -49,18 +58,14 @@ datetime_re = _lazy_re_compile(
     r'(?P<tzinfo>Z|[+-]\d{2}(?::?\d{2})?)?$'
 )
 ```
-Look at this monstrous regex.  Do you think this regex can possibly capture all 33 pages of the ISO-8601 datetime format specification?  Up until a couple years ago it couldn't even capture the difference between `en` and `fr` locales.  Those ISO-8601 datetime formats are *different*.
+Look at this monstrous regex.  Do you think this thing can possibly capture all 33 pages of the ISO-8601 datetime format specification?  Up until a couple years ago it couldn't even capture the difference between `en` and `fr` locales.  Those ISO-8601 datetime formats are *different*.
 
 # What to do?
 
-
-Stop trying to parse ISO-8601 datetime strings with a regex!
+Don't try to parse ISO-8601 datetime strings with a regex!
 
 As far as I know, there is no regex that can parse the full specification accurately.
 
 Use a library that doesn't use (brittle) regexes to parse the strings.
 
 If you're using Python, use [python-dateutil](https://github.com/dateutil/dateutil).
-
-
-
