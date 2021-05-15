@@ -32,18 +32,19 @@ Django:
 ```
 >>> from django.utils.dateparse import parse_datetime
 >>> parse_datetime("2012-04-23T10:20:30.400-0200")
-2012-04-23 10:20:30.400000-02:00
+datetime.datetime(2012, 4, 23, 10, 20, 30, 400000, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=79200), '-0200'))
 >>> parse_datetime("2012-04-23T10:20:30.400 -0200")
-None
+>>>
 ```
 
-Dateutil:
+python-dateutil:
 ```
 >>> from dateutil.parser import parse as parse_datetime
 >>> parse_datetime("2012-04-23T10:20:30.400-0200")
-2012-04-23 10:20:30.400000-02:00
+datetime.datetime(2012, 4, 23, 10, 20, 30, 400000, tzinfo=tzoffset(None, -7200))
 >>> parse_datetime("2012-04-23T10:20:30.400 -0200")
-2012-04-23 10:20:30.400000-02:00
+datetime.datetime(2012, 4, 23, 10, 20, 30, 400000, tzinfo=tzoffset(None, -7200))
+>>>
 ```
 
 You see that Django doesn't parse the second string correctly.  Why?
