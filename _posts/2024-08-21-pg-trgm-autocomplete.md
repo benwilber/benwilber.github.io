@@ -1,14 +1,14 @@
 ---
 layout: post  
-title: "Autocomplete Usernames in Mentions with pg_trgm"  
+title: "Fast autocomplete in Postgres with pg_trgm"  
 date: 2024-08-21 00:00:00  
 categories: programming  
 comments: true  
 ---
 
-# Autocomplete Usernames in Mentions with pg_trgm
+# Fast autocomplete in Postgres with pg_trgm
 
-Autocomplete functionality can significantly enhance UX, especially in comment or forums where users often mention each other by name or username. Implementing this is very efficient in PostgreSQL using the `pg_trgm` extension, which allows for fast, fuzzy text searches. This post will guide you through setting up autocomplete for usernames in mentions using `pg_trgm`.
+Autocomplete functionality can significantly enhance UX, especially in comments or forums where users often mention each other by name or username. Implementing this is very efficient in PostgreSQL using the `pg_trgm` extension, which allows for fast, fuzzy text searches. This post will guide you through setting up autocomplete for usernames in mentions using `pg_trgm`.
 
 ## Why `pg_trgm`?
 
@@ -57,10 +57,10 @@ limit 10
 ```
 
 
-Adapt as-needed.  Postgres and `pg_trgm` is great for fuzzy search on small(ish) strings.
+Adapt as-needed.  PostgreSQL and `pg_trgm` is great for fuzzy search on small(ish) strings.
 
 
-I have a PG 12 database with 140,000,0000 strings and this query takes 8ms.
+I have a PG 12 database with 140,000,0000 records and this query takes 30ms max.
 
 
 So that's ...*Pretty good*
