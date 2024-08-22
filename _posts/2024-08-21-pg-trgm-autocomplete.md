@@ -10,11 +10,11 @@ comments: true
 
 Autocomplete functionality can significantly enhance UX, especially in comments or forums where users often mention each other by name or username. Implementing this is very efficient in PostgreSQL using the `pg_trgm` extension, which allows for fast, fuzzy text searches. This post will guide you through setting up autocomplete for usernames in mentions using `pg_trgm`.
 
-## Why `pg_trgm`?
+## Why pg_trgm?
 
 The [`pg_trgm`](https://www.postgresql.org/docs/current/pgtrgm.html) (trigram) extension in PostgreSQL is designed for fast pattern matching. It breaks down strings into sequences of three consecutive characters (trigrams) and uses them to calculate similarity between strings. This makes it an ideal tool for implementing autocomplete, where you need to suggest usernames as users type.
 
-## Setting Up `pg_trgm`
+## Setting Up pg_trgm
 
 First, ensure that the `pg_trgm` extension is enabled in your PostgreSQL database:
 
