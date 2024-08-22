@@ -36,9 +36,8 @@ OK, I'll just email their support for help.  But I quickly ran into the problem:
 
 > If you did not make this request or need assistance, please click here.
 
-This goes on and n for days and days.  I send an email, re-phrase it slightly, express the dire importance.  But nothing.  I get bots.
+This goes on and on for days and days.  I send an email, re-phrase it slightly, express the dire importance.  But nothing.  I get bots.
 
 I bet if I said the word "rape" or "assault" then I would have gotten an actual human to look at my emails.
-
 
 No, I'm not going to go that way.  I just use Lyft and yellow cabs now.
