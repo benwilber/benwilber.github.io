@@ -40,24 +40,8 @@ create index users_username_trgm on users using gist (username gist_trgm_ops);
 
 Now insert millions of rows into the `users` table.
 
-Do a fuzzy search for the top 10 users by their username:
 
-```sql
-select
-	id,
-	username,
-	similarity(username, 'foo') as score
-from
-	users
-where
-	username % 'foo'
-order by
-	score desc
-limit 10
-```
-
-
-Adapt as-needed.  PostgreSQL and `pg_trgm` is great for fuzzy search on small(ish) strings.
+PostgreSQL and `pg_trgm` is great for fuzzy search on small(ish) strings.
 
 ```sql
 select
