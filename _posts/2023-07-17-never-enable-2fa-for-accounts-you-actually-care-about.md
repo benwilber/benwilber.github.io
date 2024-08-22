@@ -9,7 +9,7 @@ comments: true
 
 ## TL;DR I lost my phone that had all my 2FA codes and I didn't have backup codes for some of them.  So sue me.
 
-We live in the real world, where people make mistakes.  And, sometimes, we need some help to fix them.  About five years ago, I (regretfully) decided to enable 2FA on my Uber account.  First mistake.  Last mistake (I wish).  The second mistake I made was losing the phone that had all my Google Authenicator codes.  That sucked, but it was fine because I had all my backups codes.  Except one: Uber.  Somehow I never copied or recorded my Uber backup codes.
+We live in the real world, where people make mistakes.  And, sometimes, we need some help to fix them.  About five years ago, I (regretfully) decided to enable 2FA on my Uber account.  First mistake.  Last mistake (I wish).  The second mistake I made was losing the phone that had all my Google Authenticator codes.  That sucked, but it was fine because I had all my backups codes.  Except one: Uber.  Somehow I never copied or recorded my Uber backup codes.
 
 
 OK, I'll just email their support for help.  But I quickly ran into the problem: Uber's support is automated bot useless garbage.  
