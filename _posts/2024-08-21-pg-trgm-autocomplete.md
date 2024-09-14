@@ -49,7 +49,7 @@ select
 	username,
 	similarity(username, 'jaso') as score
 from
-	user_
+	users
 where
 	username % 'jaso'
 order by
@@ -67,8 +67,7 @@ limit
  8853   | jasongraves | 0.30769232
 ```
 
-I have a PG 12 database with 140,000,0000 users and this query takes 30ms max.
-
+I have a PG 12 database with 140,000,0000 users and this query takes 30ms.
 
 Here's an example query plan:
 
